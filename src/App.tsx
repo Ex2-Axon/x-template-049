@@ -4,76 +4,21 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 
-/* ── Floating particles ── */
-function Particles() {
-  const colors = ['#00f5ff', '#bf00ff', '#ff006e', '#00ff88', '#ffee00']
-  const particles = Array.from({ length: 30 }, (_, i) => ({
-    id: i,
-    left: `${Math.random() * 100}%`,
-    delay: `${Math.random() * 15}s`,
-    duration: `${8 + Math.random() * 12}s`,
-    color: colors[Math.floor(Math.random() * colors.length)],
-    size: `${1 + Math.random() * 3}px`,
-  }))
-
-  return (
-    <div className="particles" aria-hidden="true">
-      {particles.map((p) => (
-        <span
-          key={p.id}
-          className="particle"
-          style={{
-            left: p.left,
-            bottom: '-10px',
-            animationDelay: p.delay,
-            animationDuration: p.duration,
-            background: p.color,
-            boxShadow: `0 0 6px ${p.color}`,
-            width: p.size,
-            height: p.size,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
-/* ── Corner decorations ── */
-function Corners() {
-  return (
-    <>
-      <div className="corner-tl" aria-hidden="true" />
-      <div className="corner-tr" aria-hidden="true" />
-      <div className="corner-bl" aria-hidden="true" />
-      <div className="corner-br" aria-hidden="true" />
-    </>
-  )
-}
-
-/* ── Animated counter number ── */
 function CounterNum({ value }: { value: number }) {
   const ref = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    el.style.transform = 'scale(1.4)'
-    el.style.color = '#ff006e'
-    el.style.textShadow = '0 0 20px #ff006e'
+    el.innerHTML = `_`
     const t = setTimeout(() => {
-      el.style.transform = 'scale(1)'
-      el.style.color = ''
-      el.style.textShadow = ''
+      el.innerHTML = value.toString()
     }, 200)
     return () => clearTimeout(t)
   }, [value])
 
   return (
-    <span
-      ref={ref}
-      className="counter-num"
-      style={{ transition: 'all 0.2s ease' }}
-    >
+    <span ref={ref} style={{ display: 'inline-block', marginLeft: '5px' }}>
       {value}
     </span>
   )
@@ -84,121 +29,74 @@ function App() {
 
   return (
     <>
-      <Particles />
-      <Corners />
+      <main className="app-container">
+        <header className="hero">
+          <div className="badge">&gt; STATUS: ONLINE</div>
+          <h1>BOOT<span className="cursor"></span></h1>
+          <p className="subtitle">&gt; system initialized. awaiting input_</p>
 
-      {/* ── Hero section ── */}
-      <section id="center">
-        <div className="hero-badge animate-in-1">
-          <span className="dot" />
-          SYSTEM ONLINE — VITE + REACT
-        </div>
+          <button className="btn" onClick={() => setCount((c) => c + 1)}>
+            [EXEC_ <CounterNum value={count} />]
+          </button>
 
-        <div className="hero animate-in-2">
-          <img src={heroImg} className="base" width="160" height="168" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-
-        <div className="animate-in-3">
-          <h1 className="glitch" data-text="GET STARTED">
-            GET STARTED
-          </h1>
-          <div className="neon-line" />
-        </div>
-
-        <p className="subtitle animate-in-4">
-          Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-        </p>
-
-        <button
-          type="button"
-          className="counter animate-in-5"
-          onClick={() => setCount((c) => c + 1)}
-        >
-          COUNT_
-          <CounterNum value={count} />
-        </button>
-      </section>
-
-      <div className="ticks" />
-
-      {/* ── Next steps ── */}
-      <section id="next-steps">
-        <div id="docs">
-          <div className="section-icon-wrap">
-            <svg className="icon" role="presentation" aria-hidden="true">
-              <use href="/icons.svg#documentation-icon" />
-            </svg>
+          {/* Social Share Card (adapted from selected component) */}
+          <div className="share-card">
+            <button title="Discord">
+              <svg fill="#5865F2" preserveAspectRatio="xMidYMid" xmlns="http://www.w3.org/2000/svg" viewBox="0 -28.5 256 256">
+                <path fillRule="nonzero" fill="#5865F2" d="M216.856339,16.5966031 C200.285002,8.84328665 182.566144,3.2084988 164.041564,0 C161.766523,4.11318106 159.108624,9.64549908 157.276099,14.0464379 C137.583995,11.0849896 118.072967,11.0849896 98.7430163,14.0464379 C96.9108417,9.64549908 94.1925838,4.11318106 91.8971895,0 C73.3526068,3.2084988 55.6133949,8.86399117 39.0420583,16.6376612 C5.61752293,67.146514 -3.4433191,116.400813 1.08711069,164.955721 C23.2560196,181.510915 44.7403634,191.567697 65.8621325,198.148576 C71.0772151,190.971126 75.7283628,183.341335 79.7352139,175.300261 C72.104019,172.400575 64.7949724,168.822202 57.8887866,164.667963 C59.7209612,163.310589 61.5131304,161.891452 63.2445898,160.431257 C105.36741,180.133187 151.134928,180.133187 192.754523,160.431257 C194.506336,161.891452 196.298154,163.310589 198.110326,164.667963 C191.183787,168.842556 183.854737,172.420929 176.223542,175.320965 C180.230393,183.341335 184.861538,190.991831 190.096624,198.16893 C211.238746,191.588051 232.743023,181.531619 254.911949,164.955721 C260.227747,108.668201 245.831087,59.8662432 216.856339,16.5966031 Z M85.4738752,135.09489 C72.8290281,135.09489 62.4592217,123.290155 62.4592217,108.914901 C62.4592217,94.5396472 72.607595,82.7145587 85.4738752,82.7145587 C98.3405064,82.7145587 108.709962,94.5189427 108.488529,108.914901 C108.508531,123.290155 98.3405064,135.09489 85.4738752,135.09489 Z M170.525237,135.09489 C157.88039,135.09489 147.510584,123.290155 147.510584,108.914901 C147.510584,94.5396472 157.658606,82.7145587 170.525237,82.7145587 C183.391518,82.7145587 193.761324,94.5189427 193.539891,108.914901 C193.539891,123.290155 183.391518,135.09489 170.525237,135.09489 Z" />
+              </svg>
+            </button>
+            <button title="GitHub">
+              <svg viewBox="0 0 24 24" fill="#00ff41" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </button>
+            <button title="X (Twitter)">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32">
+                <path fill="#47ACDF" d="M11.7887 28C8.55374 28 5.53817 27.0591 3 25.4356C5.15499 25.5751 8.95807 25.2411 11.3236 22.9848C7.76508 22.8215 6.16026 20.0923 5.95094 18.926C6.25329 19.0426 7.6953 19.1826 8.50934 18.856C4.4159 17.8296 3.78793 14.2373 3.92748 13.141C4.695 13.6775 5.99745 13.8641 6.50913 13.8174C2.69479 11.0882 4.06703 6.98276 4.74151 6.09635C7.47882 9.88867 11.5812 12.0186 16.6564 12.137C16.5607 11.7174 16.5102 11.2804 16.5102 10.8316C16.5102 7.61092 19.1134 5 22.3247 5C24.0025 5 25.5144 5.71275 26.5757 6.85284C27.6969 6.59011 29.3843 5.97507 30.2092 5.4432C29.7934 6.93611 28.4989 8.18149 27.7159 8.64308C27.7224 8.65878 27.7095 8.62731 27.7159 8.64308C28.4037 8.53904 30.2648 8.18137 31 7.68256C30.6364 8.52125 29.264 9.91573 28.1377 10.6964C28.3473 19.9381 21.2765 28 11.7887 28Z"/>
+              </svg>
+            </button>
+            <button title="Instagram">
+              <svg fill="#e4405f" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                <circle fill="#e4405f" r="512" cy="512" cx="512"/>
+                <path fill="#fff" d="M512 256c-69.5 0-78.2.3-105.5 1.5-27.3 1.3-45.8 5.6-62.1 11.9-16.8 6.5-31.1 15.3-45.4 29.5s-23 28.5-29.5 45.4c-6.3 16.3-10.6 34.9-11.9 62.1-1.3 27.3-1.5 36-1.5 105.5s.3 78.2 1.5 105.5c1.3 27.2 5.6 45.8 11.9 62.1 6.5 16.8 15.3 31.1 29.5 45.4 14.2 14.2 28.5 23 45.4 29.5 16.3 6.3 34.9 10.6 62.1 11.9 27.3 1.3 36 1.5 105.5 1.5s78.2-.3 105.5-1.5c27.2-1.3 45.8-5.6 62.1-11.9 16.8-6.5 31.1-15.3 45.4-29.5 14.2-14.2 23-28.5 29.5-45.4 6.3-16.3 10.6-34.9 11.9-62.1 1.3-27.3 1.5-36 1.5-105.5s-.3-78.2-1.5-105.5c-1.3-27.2-5.6-45.8-11.9-62.1-6.5-16.8-15.3-31.1-29.5-45.4-14.2-14.2-28.5-23-45.4-29.5-16.3-6.3-34.9-10.6-62.1-11.9-27.3-1.2-36-1.5-105.5-1.5zm0 46.1c68.3 0 76.5.3 103.5 1.5 25 1.2 38.5 5.3 47.5 8.9 12 4.6 20.5 10.2 29.5 19.1 8.9 9 14.5 17.5 19.1 29.5 3.5 9 7.7 22.5 8.8 47.5 1.2 27 1.5 35.1 1.5 103.5s-.3 76.5-1.6 103.5c-1.3 25-5.5 38.5-9 47.5-4.8 12-10.2 20.5-19.2 29.5-8.9 8.9-17.6 14.5-29.4 19.1-9 3.5-22.7 7.7-47.7 8.8-27.2 1.2-35.2 1.5-103.7 1.5s-76.5-.3-103.7-1.6c-25-1.3-38.7-5.5-47.7-9-12.1-4.8-20.5-10.2-29.4-19.2-9-8.9-14.7-17.6-19.2-29.4-3.5-9-7.7-22.7-9-47.7-1-26.9-1.3-35.2-1.3-103.3 0-68.2.3-76.5 1.3-103.7 1.3-25 5.4-38.7 9-47.7 4.5-12.2 10.2-20.5 19.2-29.5 8.9-8.9 17.3-14.7 29.4-19.2 9-3.5 22.4-7.7 47.4-9 27.2-1 35.2-1.3 103.7-1.3l1 .7zm0 78.4c-72.6 0-131.5 58.9-131.5 131.5S439.4 643.5 512 643.5 643.5 584.6 643.5 512 584.6 380.5 512 380.5zm0 216.8c-47.1 0-85.3-38.2-85.3-85.3s38.2-85.3 85.3-85.3 85.3 38.2 85.3 85.3-38.2 85.3-85.3 85.3zm167.4-221.9c0 17-13.8 30.7-30.7 30.7-17 0-30.7-13.8-30.7-30.7s13.8-30.7 30.7-30.7c16.9-.1 30.7 13.7 30.7 30.7z"/>
+              </svg>
+            </button>
           </div>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank" rel="noreferrer">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank" rel="noreferrer">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn More
-              </a>
-            </li>
-          </ul>
-        </div>
 
-        <div id="social">
-          <div className="section-icon-wrap">
-            <svg className="icon" role="presentation" aria-hidden="true">
-              <use href="/icons.svg#social-icon" />
-            </svg>
+          <div className="logos">
+            <img src={heroImg} alt="Hero" className="logo" />
+            <img src={reactLogo} alt="React" className="logo" />
+            <img src={viteLogo} alt="Vite" className="logo" />
           </div>
-          <h2>Connect With Us</h2>
-          <p>Join the Vite X-Template Community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/Ex2-Axon/x-template" target="_blank" rel="noreferrer">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#github-icon" />
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://discord.gg/8Zeq8VCU" target="_blank" rel="noreferrer">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#discord-icon" />
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/Microtronic2" target="_blank" rel="noreferrer">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#x-icon" />
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/microtronic.bsky.social" target="_blank" rel="noreferrer">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#bluesky-icon" />
-                </svg>
-                Bluesky
-              </a>
-            </li>
+        </header>
+
+        <section className="info-box">
+          <h2>MANUAL_PAGES</h2>
+          <ul className="social-links">
+            <li><a href="https://vite.dev/" target="_blank" rel="noreferrer">man vite</a></li>
+            <li><a href="https://react.dev/" target="_blank" rel="noreferrer">man react</a></li>
           </ul>
-        </div>
-      </section>
+        </section>
 
-      <div className="ticks" />
+        <section className="info-box">
+          <h2>NETWORK_NODES</h2>
+          <ul className="social-links">
+            <li><a href="https://github.com/Ex2-Axon/x-template" target="_blank" rel="noreferrer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              ssh github
+            </a></li>
+            <li><a href="https://discord.gg/8Zeq8VCU" target="_blank" rel="noreferrer">ping discord</a></li>
+            <li><a href="https://x.com/Microtronic2" target="_blank" rel="noreferrer">ping x.com</a></li>
+            <li><a href="https://bsky.app/profile/microtronic.bsky.social" target="_blank" rel="noreferrer">ping bluesky</a></li>
+          </ul>
+        </section>
+      </main>
 
-      <section id="spacer">
-        <span className="footer-text">// SYSTEM v1.0.0 — READY</span>
-      </section>
+      <footer className="footer">
+        <p>© 2026 Microtronic Co., Ltd. All rights reserved. Credit By Axon.</p>
+        <p><a href="https://microtronic-thailand.github.io/privacy-policy/?lang=en" target="_blank" rel="noreferrer">Privacy Policy</a></p>
+      </footer>
     </>
   )
 }
